@@ -1,0 +1,7 @@
+Additonal Features / Enhancements / Improvements that can be done on Transfer service:
+
+-- Include additional validation to ensure that the from and to account ids actually exist
+-- Transfer amount cannot be zero, it means nothing to transfer 0 from one account to another
+-- Ideal scenarios should include an additional attribute containing the date/time of transfer (makes easy to track)
+-- It should also include a unique transaction reference (could be a hash of from + to + amount + timestamp)
+-- Additionally it should also include other details such as IP address (from where the transaction was initiated)
