@@ -4,7 +4,6 @@ import com.db.awmd.challenge.domain.Account;
 import com.db.awmd.challenge.domain.AccountTransfer;
 import com.db.awmd.challenge.exception.DuplicateAccountIdException;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -8,6 +8,7 @@ import com.db.awmd.challenge.domain.AccountTransfer;
 import com.db.awmd.challenge.exception.InvalidTransferRequestException;
 import com.db.awmd.challenge.repository.AccountsRepository;
 import com.db.awmd.challenge.service.TransferService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,15 @@ public class TransferServiceTest {
 
     private static final String INSUFFICIENT_FUNDS_MSG = "Insufficient funds to carry out this transfer!";
 
+    @Before
+    public void cleanUp() {
+        accountsRepository.clearAccounts();
+    }
+
     @Test
     public void testTransfer_withoutErrors() throws Exception {
         this.setupAccounts();
-        AccountTransfer accountTransfer = new AccountTransfer("Id-123", "Id=456");
+        AccountTransfer accountTransfer = new AccountTransfer("Id-123", "Id-456");
         accountTransfer.setTransferAmount(new BigDecimal(1000));
         this.transferService.transferAmount(accountTransfer);
         assertThat(this.accountsRepository.getAccount("Id-123")
@@ -70,7 +76,7 @@ public class TransferServiceTest {
 
     private void setupAccounts() {
         Account fromAccount = new Account("Id-123");
-        Account toAccount = new Account("Id=456");
+        Account toAccount = new Account("Id-456");
         fromAccount.setBalance(new BigDecimal(5000));
         toAccount.setBalance(new BigDecimal(2000));
         this.accountsRepository.createAccount(fromAccount);
