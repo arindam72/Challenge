@@ -34,7 +34,7 @@ public class AccountsController {
     this.transferService = transferService;
   }
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> createAccount(@RequestBody @Valid Account account) {
     log.info("Creating account {}", account);
 
@@ -53,7 +53,7 @@ public class AccountsController {
     return this.accountsService.getAccount(accountId);
   }
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(path = "/transfer", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Object> transferAmount(@RequestBody @Valid AccountTransfer transfer){
       log.info("Executing transfer {}", transfer);
       try {
