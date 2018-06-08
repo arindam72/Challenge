@@ -37,16 +37,19 @@ public class AccountsRepositoryInMemory implements AccountsRepository {
     if (transfer.getTransferAmount().doubleValue() < 0) {
         throw new InvalidTransferRequestException("Transfer amount must be a positive number!");
     }
-    Account fromAccount = this.getAccount(transfer.getFromAccountId());
-    if (fromAccount.getBalance().doubleValue() < transfer.getTransferAmount().doubleValue()) {
-        throw new InvalidTransferRequestException("Insufficient funds to carry out this transfer!");
+    // Transfer operation needs to be thread safe
+    synchronized (this) {
+        Account fromAccount = this.getAccount(transfer.getFromAccountId());
+        if (fromAccount.getBalance().doubleValue() < transfer.getTransferAmount().doubleValue()) {
+            throw new InvalidTransferRequestException("Insufficient funds to carry out this transfer!");
+        }
+        Account toAccount = this.getAccount(transfer.getToAccountId());
+        fromAccount.setBalance(fromAccount.getBalance().subtract(transfer.getTransferAmount()));
+        toAccount.setBalance(toAccount.getBalance().add(transfer.getTransferAmount()));
+        NotificationService notification = new EmailNotificationService();
+        notification.notifyAboutTransfer(fromAccount, "An amount of " + transfer.getTransferAmount() +
+                " has been successfully transferred to the account id: " + toAccount.getAccountId() + "!");
     }
-    Account toAccount = this.getAccount(transfer.getToAccountId());
-    fromAccount.setBalance(fromAccount.getBalance().subtract(transfer.getTransferAmount()));
-    toAccount.setBalance(toAccount.getBalance().add(transfer.getTransferAmount()));
-    NotificationService notification = new EmailNotificationService();
-    notification.notifyAboutTransfer(fromAccount, "An amount of " + transfer.getTransferAmount() +
-        " has been successfully transferred to the account id: " + toAccount.getAccountId() + "!");
   }
 
   @Override
